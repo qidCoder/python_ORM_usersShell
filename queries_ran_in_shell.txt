@@ -1,0 +1,71 @@
+#Created by Shelley Ophir
+#Coding Dojo Oct. 08, 2020
+#Create a new project called single_model_orm with an app called users_app. Using the following ERD, complete the tasks listed below:
+
+
+Create 3 new users
+>>> User.objects.create(first_name = "Shelley" , last_name = "Ophir" , email_address = "Iam@dot.com" , age = 732)
+<User: User object (1)>
+>>> User.objects.all()
+<QuerySet [<User: User object (1)>]>
+>>> User.objects.create(first_name = "Elon" , last_name = "Musk" , email_address = "e.musk@spacex.com" , age = 54)
+<User: User object (2)>
+>>> User.objects.all()
+<QuerySet [<User: User object (1)>, <User: User object (2)>]>
+>>> User.objects.create(first_name = "Cosmo" , last_name = "Kramer" , email_address = "cosmo@kramer.com" , age = 67)
+<User: User object (3)>
+
+Retrieve all the users
+>>> User.objects.all()
+<QuerySet [<User: User object (1)>, <User: User object (2)>, <User: User object (3)>]>
+
+Retrieve the last user
+>>> User.objects.last()
+<User: User object (3)>
+>>> User.objects.all().last()
+<User: User object (3)>
+
+Retrieve the first user
+>>> User.objects.all().first()
+<User: User object (1)>
+>>> User.objects.first()
+<User: User object (1)>
+
+Change the user with id=3 so their last name is Pancakes.
+>>> User.objects.get(id=3)
+<User: User object (3)>
+>>> User.objects.get(id=3).__dict__
+{'_state': <django.db.models.base.ModelState object at 0x000001D831200AF0>, 'id': 3, 'first_name': 'Cosmo', 'last_name': 'Kramer', 'email_address': 'cosmo@kramer.com', 'age': 67, 'created_at': datetime.datetime(2020, 10, 8, 21, 0, 18, 426477, tzinfo=<UTC>), 'updated_at': datetime.datetime(2020, 10, 8, 21, 0, 18, 426477, tzinfo=<UTC>)}
+>>> u = User.objects.get(id=3)
+>>> u.last_name = "Pancakes"
+>>> u.save()
+>>> User.objects.last().__dict__
+{'_state': <django.db.models.base.ModelState object at 0x000001D831200C70>, 'id': 3, 'first_name': 'Cosmo', 'last_name': 'Pancakes', 'email_address': 'cosmo@kramer.com', 'age': 67, 'created_at': datetime.datetime(2020, 10, 8, 21, 0, 18, 426477, tzinfo=<UTC>), 'updated_at': datetime.datetime(2020, 10, 8, 22, 16, 1, 783592, tzinfo=<UTC>)}
+>>>
+
+Delete the user with id=2 from the database
+>>> User.objects.get(id=2)
+<User: User object (2)>
+>>> d = User.objects.get(id=2)
+>>> d.delete()
+(1, {'users_app.User': 1})
+>>> User.objects.all()
+<QuerySet [<User: User object (1)>, <User: User object (3)>]>
+>>> User.objects.get(id=2)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\Qid\Desktop\Coding DOJO\Python_stack\my_environments\django\djangoPy3Env\lib\site-packages\django\db\models\manager.py", line 82, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\Qid\Desktop\Coding DOJO\Python_stack\my_environments\django\djangoPy3Env\lib\site-packages\django\db\models\query.py", line 406, in get
+    raise self.model.DoesNotExist(
+users_app.models.User.DoesNotExist: User matching query does not exist.
+
+Get all the users, sorted by their first name
+>>> User.objects.all()
+<QuerySet [<User: <User object: Shelley (id: 1)>>, <User: <User object: Cosmo (id: 3)>>]>
+>>> User.objects.all().order_by("first_name")
+<QuerySet [<User: <User object: Cosmo (id: 3)>>, <User: <User object: Shelley (id: 1)>>]>
+
+Get all the users, sorted by their first name in descending order
+>>> User.objects.all().order_by("-first_name")
+<QuerySet [<User: <User object: Shelley (id: 1)>>, <User: <User object: Cosmo (id: 3)>>]>
